@@ -16,9 +16,8 @@ class App extends Component {
           <h2 className="App-title"> ☢ custom-react-scripts ☢ </h2>
           <div className="App-subtitle"> Allow custom config for create-react-app without ejecting</div>
         </div>
-
         <div className={styles.description}>
-          Description...
+          Updated to use static render() method
         </div>
       </div>
     )
