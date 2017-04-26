@@ -18,11 +18,12 @@ class Manage extends Component {
 
 
 function mapStateToProps(store, ownProps) {
+  return {};
 
 }
 
 function mapDispatchToProps(dispatch, state) {
-
+  return {};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Manage)

@@ -1,36 +1,17 @@
-import App from 'containers/App';
+import dashboard from './dashboard';
+import websites from './websites';
+import contacts from './contacts';
+import training from './training';
 
-export default {
-  path: '/',
-  indexRoute: { component: App },
-  /**
-  getIndexRoute(location, cb) {
-    if (__CLIENT__) {
-      require.ensure([], require => {
-        cb(null, {component: require('containers/Home').default});
-      });
-    } else {
-      cb(null, {component: require('containers/Home').default});
-    }
-  },
-   **/
-  getChildRoutes(location, cb) {
-    if (__CLIENT__) {
-      require.ensure([], require => {
-        cb(null, [
-          require('./dashboard').default,
-          require('./websites').default,
-          // require('./contacts').default,
-          // require('./training').default,
-        ]);
-      });
-    } else {
-      cb(null, [
-        require('./dashboard').default,
-        require('./websites').default,
-        // require('./contacts').default,
-        // require('./training').default,
-      ]);
-    }
-  },
-};
+let routes = [];
+/******
+ * Usage 1: Standard menu rendering from provided routes
+ */
+
+export default routes.concat(dashboard, websites, contacts, training);
+
+/*******
+ * Usage 2: Injecting dividers and/or subheaders between provided routes
+ */
+
+// export default routes.concat(dashboard, [{divider: true}], [{subheader: true, label: 'Websites'}], websites, [{divider: true}], [{subheader: true, label: 'Contacts/Followups'}], contacts, training);

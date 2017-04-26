@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import Manage from './websites/Manage';
 import Reports from './websites/Reports';
 
@@ -14,11 +14,15 @@ class WebsitesPage extends Component {
   }
 
   render() {
-    console.log('rendering WebsitesPage');
     return(
-      <div className="md-grid md-cell md-cell--middle">
-        <h1>Websites Page</h1>
-      </div>
+      <Route
+        render={({ location }) => (
+          <div className="md-grid md-cell md-cell--middle">
+            <Route path="/websites/manage" component={Manage} />
+            <Route path="/websites/reports" component={Reports} />
+          </div>
+        )}
+      />
     );
   }
 }
@@ -34,4 +38,4 @@ function mapDispatchToProps(dispatch, state) {
 
 }
 **/
-export default connect()(WebsitesPage)
+export default withRouter(connect()(WebsitesPage))

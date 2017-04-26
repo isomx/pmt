@@ -1,37 +1,26 @@
-export default {
-  path: 'websites',
-  indexRoute: {
-    getComponent(location, cb) {
-      if (__CLIENT__) {
-        require.ensure([], require => {
-          cb(null, { component: require('containers/WebsitesPage').default });
-        });
-      } else {
-        cb(null, { component: require('containers/WebsitesPage').default });
+export default [
+  {
+    path: 'websites',
+    label: 'Websites',
+    leftIcon: 'important_devices',
+    pageTitle: 'Websites',
+    nestedItems: [
+      {
+        path: 'manage',
+        label: 'Manage',
+        pageTitle: 'Manage',
+      },
+      {
+        path: 'reports',
+        label: 'Reports',
+        pageTitle: 'Reports'
       }
-    },
+    ],
   },
-  childRoutes: [{
-    path: 'manage',
-    getComponent(location, cb) {
-      if (__CLIENT__) {
-        require.ensure([], require => {
-          cb(null, { component: require('containers/websites/Manage').default });
-        });
-      } else {
-        cb(null, { component: require('containers/websites/Manage').default });
-      }
-    },
-  },{
-    path: 'reports',
-    getComponent(location, cb) {
-      if (__CLIENT__) {
-        require.ensure([], require => {
-          cb(null, { component: require('containers/websites/Reports').default });
-        });
-      } else {
-        cb(null, { component: require('containers/websites/Reports').default });
-      }
-    },
-  }]
-};
+  {
+    path: 'funnels',
+    label: 'Funnels',
+    leftIcon: 'network_wifi',
+    pageTitle: 'Funnels',
+  }
+];

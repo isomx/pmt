@@ -10,7 +10,6 @@ class DashboardPage extends Component {
   }
 
   render() {
-    console.log('rendering Dashboard Page');
     return(
       <h1>Dashboard Page</h1>
     );
