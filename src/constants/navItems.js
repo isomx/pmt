@@ -64,6 +64,7 @@ function buildRealRoutes(route, parents = [], titlePrefix = '') {
   } else {
     /*********
      *  If uncommented, the parent container will initiate a navigation action when clicked vs just opening
+     *  NOTE: Must also change rComponent = 'div' to rComponent = Link  (above if/else statement)
 
     to = `${prefix}${path}`;
 
@@ -109,6 +110,7 @@ function updateActiveRoutes(route, pathname) {
     to,
     active,
     defaultOpen: nestedItems && active,
+    // defaultOpen: nestedItems && nestedActive,
     nestedItems: nestedItems && nestedItems.map(route => updateActiveRoutes(route, pathname)),
   };
 }

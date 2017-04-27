@@ -14,7 +14,7 @@ export default [
         path: 'reports',
         label: 'Reports',
         pageTitle: 'Reports'
-      }
+      },
     ],
   },
   {

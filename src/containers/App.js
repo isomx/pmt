@@ -22,18 +22,17 @@ class App extends Component {
             // tabletDrawerType={NavigationDrawer.DrawerTypes.TEMPORARY}
             // desktopDrawerType={NavigationDrawer.DrawerTypes.CLIPPED}
             // desktopDrawerType={NavigationDrawer.DrawerTypes.TEMPORARY}
-            // desktopDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT}
+            desktopDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT_MINI}
             // navItems={navItems.map((props, i) => <ListItem {...props} key={i} />)}
             // navItems={getNavItems(location.pathname)}
             navItems={currNav.navItems}
           >
-            <Switch>
-              <Route exact={true} path="/" component={Greeting} />
+            <Switch key={location.key}>
+              <Route path="/funnels" component={Greeting} />
               <Route path="/websites" component={WebsitesPage} />
               <Route path="/dashboard" component={DashboardPage} />
             </Switch>
           </NavigationDrawer>
-
         )}
       />
     );

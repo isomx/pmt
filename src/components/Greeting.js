@@ -3,7 +3,7 @@ import Card from 'react-md/lib/Cards/Card';
 import CardTitle from 'react-md/lib/Cards/CardTitle';
 import CardText from 'react-md/lib/Cards/CardText';
 import Button from 'react-md/lib/Buttons/Button';
-import '../scss/components/_greeting.scss';
+// import '../scss/components/_greeting.scss';
 
 const Greeting = () => (
   <Card className="greeting">
