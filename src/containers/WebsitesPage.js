@@ -17,7 +17,7 @@ class WebsitesPage extends Component {
     return(
       <Route
         render={({ location }) => (
-          <section key="2531" className="md-grid md-grid--40-16">
+          <section className="md-grid md-grid--40-16">
             <section className="md-cell md-cell--12">
               <Route path="/websites/manage" component={Manage} />
               <Route path="/websites/reports" component={Reports} />

@@ -4,8 +4,12 @@
   "private": true,
   "dependencies": {
     "classnames": "^2.2.5",
+    "dom-helpers": "^3.2.1",
+    "gsap": "^1.19.1",
     "history": "^4.6.1",
     "lodash": "^4.17.4",
+    "prop-types": "^15.5.8",
+    "query-string": "^4.3.4",
     "react": "^15.5.4",
     "react-addons-css-transition-group": "^15.5.2",
     "react-addons-transition-group": "^15.5.2",
@@ -15,10 +19,14 @@
     "react-router-dom": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.6",
     "redux": "^3.6.0",
+    "redux-logic": "^0.12.1",
+    "redux-thunk": "^2.2.0",
+    "rxjs": "^5.3.1",
     "webfontloader": "^1.6.27"
   },
   "devDependencies": {
-    "custom-react-scripts": "0.0.23"
+    "custom-react-scripts": "0.0.23",
+    "redux-logger": "^3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

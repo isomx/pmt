@@ -1,7 +1,9 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Paper from 'react-md/lib/Papers/Paper';
 
-class Manage extends Component {
+export default class Manage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -9,10 +11,28 @@ class Manage extends Component {
     };
   }
 
+  componentWillAppear(callback) {
+    console.log('Manage - Will Appear');
+    callback();
+  }
+
+  componentWillEnter(callback) {
+    console.log('Manage - Will Enter');
+    callback();
+  }
+
+  componentWillLeave(callback) {
+    console.log('Manage - Will Leave');
+    callback();
+  }
+// <div key="3891" style={{display: 'block', position: 'relative', backgroundColor: '#fff'}} onClick={this.props.doNav}>
   render() {
     return(
-      <section className="md-grid md-grid--40-24">
-        <h3>Websites - Manage</h3>
+      <section  className="md-grid md-grid--40-24">
+        <div className="md-cell md-cell--12">
+        <Paper>
+          <div style={{backgroundColor: '#fff'}}>
+        <h3>Funnels - Manage</h3>
         <div>
           <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In maxime perferendis ullam. Assumenda at
             consequatur delectus, distinctio eveniet, facilis fugiat fugit inventore laudantium nisi optio provident quo
@@ -53,6 +73,10 @@ class Manage extends Component {
             suscipit!
           </div>
         </div>
+          </div>
+        </Paper>
+        </div>
+
       </section>
     );
   }
@@ -68,4 +92,4 @@ function mapDispatchToProps(dispatch, state) {
   return {};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Manage)
+//export default connect(mapStateToProps, mapDispatchToProps)(Manage)

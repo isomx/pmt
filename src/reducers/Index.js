@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-// import treeReducer from "./TreeReducer";
+import Navigation from './NavReducer';
+import Transitions from './TransitionsReducer';
 
 export default combineReducers({
-  // tree: treeReducer,
   router: routerReducer,
+  nav: Navigation,
+  transitions: Transitions,
 });
