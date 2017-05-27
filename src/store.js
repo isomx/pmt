@@ -37,7 +37,7 @@ const logicMiddleware = createLogicMiddleware(combinedLogic, deps);
 };
 
 // const middleware = applyMiddleware(thunk, routerMiddleware(history), error, createLogger());
-const middleware = applyMiddleware(thunk, routerMiddleware(history), logicMiddleware);
+const middleware = applyMiddleware(thunk, logicMiddleware, routerMiddleware(history));
 
 
 // const middleware = applyMiddleware(thunk, error, routerMiddleware(history));

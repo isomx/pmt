@@ -14,7 +14,8 @@ import Button from 'react-md/lib/Buttons';
 import TweenMax, { Power2 } from 'gsap';
 import ReactTransitionGroup from 'react-addons-transition-group';
 import { routeTransition } from '../../actions/mdTransition';
-import { source$ } from '../../observables/transitions';
+import { toRoute } from '../../actions/nav';
+import MdTransitionEvent from '../../components/mdTransitions/MdTransitionEvent';
 
 
 import MdTransitionAnchor from '../../components/mdTransitions/MdTransitionAnchor';
@@ -86,7 +87,7 @@ class Home extends Component {
   }
 
   render() {
-    // console.log('Home rendering');
+    console.log('Home rendering');
     const cssTransition = false;
     /**
      <ReactCSSTransitionGroup
@@ -116,11 +117,11 @@ class Home extends Component {
           <MdTransitionAnchor name="card1">
             <Card style={{ height: '100%' }} className="md-block-centered" raise={true}>
               <Media>
-                <img src={imgSrc} role="presentation" />
+                <img src={imgSrc} role="presentation" onClick={(e) => { this.props.routeTransition(e, '/dashboard'); }}/>
                 <MediaOverlay>
-                  <CardTitle title="mysiteasdfwejlk34.com">
-                    <Button className="md-cell--right" icon>star_outline</Button>
-                  </CardTitle>
+                    <CardTitle title="mysiteasdfwejlk34.com">
+                      <Button className="md-cell--right" icon>star_outline</Button>
+                    </CardTitle>
                 </MediaOverlay>
               </Media>
               <MdTransitionElement name="card1">
@@ -131,10 +132,19 @@ class Home extends Component {
               </MdTransitionElement>
               <CardActions expander>
                 <Button flat label="MANAGE" onClick={(e) => { this.navIn(e, '/funnels/manage') } } />
-                <Button flat label="Dashboard" onClick={(e) => { this.props.routeTransition(e, '/dashboard'); }} />
+                <MdTransitionEvent render={(props) =>
+                  <Button flat label="Dashboard" onClick={(event) => {
+                    // props.routeTransition('/dashboard', 'anchorCommonElement', 'card1');
+                    props.dispatchToParentGroup({
+                      type: 'toDashboard',
+                      payload: {
+                        commonElement: 'card1',
+                      }
+                    });
+                  }} />
+                } />
               </CardActions>
               <CardText expandable>
-
               </CardText>
             </Card>
           </MdTransitionAnchor>
@@ -209,7 +219,8 @@ function mapStateToProps(store, ownProps) {
 
 function mapDispatchToProps(dispatch, state) {
   return {
-    routeTransition: (e, locOrUrl) => dispatch(routeTransition(e, locOrUrl)),
+    routeTransition: (e, locOrUrl, eventProps) => dispatch(routeTransition(e, locOrUrl, eventProps)),
+    // toRoute: (route) => dispatch(toRoute(route)),
   };
 }
 

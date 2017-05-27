@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
+import { Route } from 'react-router-dom';
 import App from './containers/App';
 import store, { history } from './store';
+import MdTransitionConnect from './containers/MdTransitionConnect';
 
 import WebFontLoader from 'webfontloader';
 
@@ -18,7 +20,11 @@ WebFontLoader.load({
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
-      <App />
+      <Route render={(props) =>
+        <MdTransitionConnect {...props}>
+          <App {...props} />
+        </MdTransitionConnect>
+      } />
     </ConnectedRouter>
   </Provider>,
   document.getElementById('root')

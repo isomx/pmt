@@ -1,5 +1,5 @@
 // import { push } from 'react-router-redux';
-
+const routerLocationChange = '@@router/LOCATION_CHANGE';
 /**
 export const navTransitionIn = (dispatch) => {
   return (currLocation, toUrl, fromRect) => {
@@ -32,6 +32,28 @@ export const navTransitionIn = (e, url) => (dispatch, getState) => {
   // dispatch({type: 'My Action', payload: {something: '123', something2: '456'}});
 }
  **/
+export const toDashboard = {
+  type: routerLocationChange,
+  payload: {
+    url: '/dashboard',
+  }
+}
+
+export const toRoute = (key) => {
+  let action = {
+    type: routerLocationChange,
+    payload: {},
+  };
+  switch(key) {
+    case 'dashboard':
+      action.payload.url = '/dashboard';
+      return action;
+    default:
+      action.payload.url = '/';
+      return action;
+  }
+}
+
 export const navTransitionIn = (e, url) => {
   console.log('e.pageX = ', e.pageX);
   console.log('e.pageY = ', e.pageY);

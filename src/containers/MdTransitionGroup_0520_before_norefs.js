@@ -9,24 +9,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import difference from 'lodash/difference';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import MdTransitionGroupChild from '../components/mdTransitions/MdTransitionGroupChild';
 import { getChildMapping, mergeChildMappings } from '../utils/ChildMapping';
 import { groupActions } from '../observables/transitions/actions';
-import { mdTransitionActions } from '../actions/actionTypes';
-
-export const MdTransitionHandler = ({lifecycleManager, name, ...props}) => {
-  return (<div {...props}>{props.children}</div>);
-};
-
-MdTransitionHandler.propTypes = {
-  lifecycleManager: React.PropTypes.func.isRequired,
-  name: React.PropTypes.string.isRequired,
-}
-MdTransitionHandler.defaultProps = {
-  //lifecycleManager: () => {},
-  name: 'main',
-}
 
 
 class MdTransitionGroup extends React.Component {
@@ -41,53 +26,37 @@ class MdTransitionGroup extends React.Component {
     this.state = {
       children: getChildMapping(props.children),
     };
-
     this.registerChild = this.registerChild.bind(this);
     this.registerChildContainer = this.registerChildContainer.bind(this);
 
     this._handleAction = this._handleAction.bind(this);
     this.parentId = this.context.mdTransition.parentId();
 
-    groupActions.connect(this.parentId, this._handleAction, this.props.name);
+    groupActions.connect(this.parentId, this._handleAction);
     this.children = {};
-    this.idToKey = {};
+
   }
 
-  notifyManager(action) {
-    console.log('notifyManager = ', action);
-    let payload = {
-      keysToEnter: this.keysToEnter,
-      keysToLeave: this.keysToLeave,
-      childRefs: this.childRefs,
-      childContainers: this.childContainers,
-      performAppear: this.performAppear,
-      performEnter: this.performEnter,
-      performLeave: this.performLeave,
-      getStore: groupActions.getStore,
-    };
-    if (!action.payload) {
-      action.payload = payload;
-    } else {
-      action.payload = {...action.payload, ...payload};
-    }
-    this.props.transitionManager(action);
+  testReceive() {
+    console.log('testReceive, id = ', this.id);
   }
 
   _handleAction(action) {
-    switch(action.type) {
+    switch(action) {
       case 'connect':
         return {
           next: (id) => {
             this.id = id;
+            this.testReceive();
           },
           error: (err) => {console.log("err = ", err)},
-          complete: () => {}
+          complete: () => {console.log('complete!') }
         }
       case 'addChild':
         return (source) =>
           source.map((elem) => {
             this.children[elem.key] = elem;
-            this.idToKey[elem.id] = elem.key;
+            console.log('this.children = ', this.children);
             return elem.id;
           })
       case 'removeChild':
@@ -97,19 +66,7 @@ class MdTransitionGroup extends React.Component {
               delete this.children[elem.key];
             }
             return elem;
-          });
-      case 'dispatchToParentGroup':
-        action.payload.parentIds.push(this.id);
-        this.notifyManager(action);
-        //this.props.transitionManager(action.receivedAction);
-        break;
-      case 'routeTransition':
-        action.payload.parentIds.push(this.id);
-        action.type = mdTransitionActions.TRANSITION_ROUTE;
-        this.props.dispatch(action);
-        break;
-
-
+          })
     }
   }
 
@@ -139,12 +96,6 @@ class MdTransitionGroup extends React.Component {
      this.keysToEnter = [];
      this.keysToLeave = [];
      **/
-    this.props.transitionManager({
-      type: 'componentWillMount',
-      payload: {
-        id: this.id,
-      }
-    })
   }
 
   componentDidMount() {
@@ -158,7 +109,6 @@ class MdTransitionGroup extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     console.log('COMPONENT WILL RECEIVE PROPS');
-    this.anchorElem = groupActions.getAnchorElem();
     let nextChildMapping = getChildMapping(nextProps.children);
     let prevChildMapping = this.state.children;
 
@@ -203,22 +153,16 @@ class MdTransitionGroup extends React.Component {
     }
     for (let key in childRect) {
       let styles = `position: fixed; z-index: -1; top: ${childRect[key].top}px; width: ${childRect[key].width}px;`;
-      // this.childContainers[key].style.cssText = styles;
+      this.childContainers[key].style.cssText = styles;
     }
-    // window.scrollTo(0,0);
+    window.scrollTo(0,0);
 
     /** MY ADDITION **/
     if (this.props.transitionMode === 'out-in') {
       this.keysToEnter = difference(this.keysToEnter, this.keysToLeave);
     }
-    this.notifyManager({type: 'componentWillReceiveProps'});
 
     // If we want to someday check for reordering, we could do it here.
-  }
-
-  componentWillUpdate() {
-    // this.notifyManager('componentWillUpdate');
-
   }
 
   componentDidUpdate() {
@@ -263,8 +207,7 @@ class MdTransitionGroup extends React.Component {
   }
 
   componentWillUnmount() {
-    // this.subscription.unsubscribe();
-    console.log('mdTransitionGroup Will Unmount');
+    this.subscription.unsubscribe();
   }
 
   performAppear = (key) => {
@@ -320,7 +263,7 @@ class MdTransitionGroup extends React.Component {
 
     const enterPromise = new Promise((resolve) => {
       if (component.componentWillEnter) {
-        component.componentWillEnter(resolve, this.childContainers[key]);
+        component.componentWillEnter(resolve);
       } else {
         resolve();
       }
@@ -527,48 +470,28 @@ class MdTransitionGroup extends React.Component {
   }
 
   render() {
-    console.log('mdTransitionGroup rendering');
     let childrenToRender = [];
-    let count = 0;
     for (let key in this.state.children) {
-      let child = this.state.children[key].child;
+      let child = this.state.children[key];
       if (child) {
 
         let ref = (r) => {
           this.registerChild(key, r);
         };
         let props = {
-          // registerChildContainer: this.registerChildContainer,
-          // childKey: key,
+          registerChildContainer: this.registerChildContainer,
+          childKey: key,
           ref,
-          // key: key,
+          key: key,
           childRefId: this.props.childRefId,
-          lifecycleManager: this.state.children[key].lifecycleManager,
-          name: this.state.children[key].name,
           willLeave: this.keysToLeave.indexOf(key) > -1 ? true : false,
         };
-        if (props.willLeave) {
-          let childRect = this.childContainers[key].getBoundingClientRect();
-          let styles = {position: 'fixed', transformOrigin: '0% 0%', zIndex: -1, top: `${childRect.top}px`, width: `${childRect.width}px`};
-          childrenToRender.push(
-            <div key={key} ref={(elem) => this.registerChildContainer(key, elem)} style={styles}>
-              <MdTransitionGroupChild {...props}>
-                {child}
-              </MdTransitionGroupChild>
-            </div>
-          );
-        } else {
-          childrenToRender.push(
-            <div key={key} ref={(elem) => this.registerChildContainer(key, elem)} style={{overflow: 'hidden'}}>
-              <MdTransitionGroupChild {...props}>
-                  {child}
-              </MdTransitionGroupChild>
-            </div>
-          );
-        }
-
-        count++;
-
+        console.log('props.childKey = ', props.childKey);
+        childrenToRender.push(
+          <MdTransitionGroupChild {...props}>
+            {child}
+          </MdTransitionGroupChild>
+        );
 
         /**
         childrenToRender.push(
@@ -591,16 +514,6 @@ class MdTransitionGroup extends React.Component {
 
       }
     }
-    /**
-    if (this.anchorElem) {
-      childrenToRender.push(
-        <div key="241" style={{top: 0, zIndex: '1', position: 'absolute', width: '500px', height: '500px'}}>
-          {this.anchorElem.callback('render')}
-        </div>
-      );
-      this.anchorElem = null;
-    }
-     **/
 
     // Do not forward TransitionGroup props to primitive DOM nodes
     let props = Object.assign({}, this.props);
@@ -644,7 +557,7 @@ MdTransitionGroup.propTypes = {
 MdTransitionGroup.defaultProps = {
   component: 'span',
   childFactory: child => child,
-  transitionMode: 'in-out',
+  transitionMode: 'simultaneous',
   deferLeavingComponentRemoval: false,
 };
 
@@ -662,9 +575,7 @@ function mapStateToProps(store, ownProps) {
 }
 
 function mapDispatchToProps(dispatch, state) {
-  return {
-    dispatch,
-  };
+  return {};
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MdTransitionGroup));
+export default connect(mapStateToProps, mapDispatchToProps)(MdTransitionGroup);

@@ -17,10 +17,22 @@ export function getChildMapping(children) {
     return children;
   }
   let result = {};
+  /**
   Children.map(children, child => child)
     .forEach((child) => {
       result[child.key] = child;
     });
+   **/
+  Children.map(children, (child) => {
+    if (child.props.lifecycleManager && child.props.name) {
+      result[child.key] = {
+        child,
+        lifecycleManager: child.props.lifecycleManager,
+        name: child.props.name,
+      };
+
+    }
+  });
   return result;
 }
 

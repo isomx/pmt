@@ -1,14 +1,51 @@
 /* eslint-disable */
 import React, { Component } from 'react';
-import { registerElem } from '../../observables/transitions';
+import PropTypes from 'prop-types';
+import { commonElementActions } from '../../observables/transitions/actions';
 
 export default class MdTransitionElement extends Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     this.registerElem = this.registerElem.bind(this);
-    this.state = {
-      runCount: 0,
-    };
+    this._handleAction = this._handleAction.bind(this);
+
+    this.parentId = this.context.mdTransitionAnchor && this.context.mdTransitionAnchor.parentId ? this.context.mdTransitionAnchor.parentId() : null;
+    if (this.parentId) {
+      commonElementActions.connect(this.parentId, this._handleAction, this.props.name);
+    }
+    this.children = {};
+  }
+
+  _handleAction(action) {
+    switch(action.type) {
+      case 'connect':
+        return {
+          next: (id) => {
+            this.id = id;
+          },
+          error: (err) => {console.log("err = ", err)},
+          complete: () => {}
+        }
+      case 'addChild':
+        return (source) =>
+          source.map((elem) => {
+            this.children[elem.id] = elem;
+            // console.log('this.children = ', this.children);
+            return elem.id;
+          })
+      case 'removeChild':
+        return (source) =>
+          source.map((elem) => {
+            if (this.children[elem.id]) {
+              delete this.children[elem.id];
+            }
+            return elem;
+          })
+      case 'getRef':
+        return this.elem;
+      case 'getChildren':
+        return this.props.children;
+    }
   }
 
   componentWillMount() {
@@ -22,7 +59,6 @@ export default class MdTransitionElement extends Component {
   registerElem(elem) {
     if (elem) {
       this.elem = elem;
-      registerElem('commonElement', this.props.name, elem);
       /**
        const newElem = elem.cloneNode(true);
        document.body.append(newElem);
@@ -35,7 +71,6 @@ export default class MdTransitionElement extends Component {
        // <div dangerouslySetInnerHTML={{__html: this.state.elem.innerHTML}} />
        **/
     }
-
   }
 
   render() {
@@ -45,4 +80,8 @@ export default class MdTransitionElement extends Component {
       </div>
     );
   }
+}
+
+MdTransitionElement.contextTypes = {
+  mdTransitionAnchor: PropTypes.object,
 }

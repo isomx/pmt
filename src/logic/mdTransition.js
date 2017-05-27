@@ -2,31 +2,100 @@
 import { createLogic } from 'redux-logic';
 import { navActions, mdTransitionActions } from '../actions/actionTypes';
 import difference from 'lodash/difference';
-import { getElems, resetElems, getBoundingRect } from '../observables/transitions';
+import { logicActions } from '../observables/transitions/actions';
 // import Rx from 'rxjs/Rx';
 import { push } from 'react-router-redux';
+import { history } from '../store';
 
-let prevElems = {};
-let prevBoundingRect = {};
 
 export const mdTransition = createLogic({
-  type: mdTransitionActions.TRANSITION_ROUTE,
+  type: [mdTransitionActions.TRANSITION_ROUTE],
   cancelType: ['REGISTER_ROOT_CANCEL'],
   debounce: 0,
   throttle: 0,
-  latest: false, //default
+  latest: true, //default
   transform({ getState, action }, next, reject) {
-    console.log('transforming action = ', action);
-    prevElems = getElems();
-    prevBoundingRect = getBoundingRect();
-    resetElems();
-    console.log('transition prevElems = ', prevElems);
-    console.log('transition prevBoundingRect = ', prevBoundingRect);
-    next(action);
+    //action.type = navActions.LOCATION_CHANGE;
+    console.log('LOGIC TRANSFORM');
+    const locOrUrl = action.payload.url ? action.payload.url : (action.payload.location ? action.payload.location : null);
+    if (!locOrUrl) {
+      reject();
+      return;
+    }
+    let location = {};
+    if (typeof locOrUrl === 'string') {
+      const parts = locOrUrl.split('?');
+      location.pathname = parts[0];
+      if (parts[1]) {
+        location.search = '?' + parts[1];
+      }
+    } else {
+      location = locOrUrl;
+    }
+    console.log('action = ', action);
+    const store = logicActions.getStore();
+    switch(action.payload.transitionType) {
+      case 'anchorCommonElement':
+        console.log('logic store = ', getState());
+        let { groupId, anchorId, commonElementId } = action.payload;
+        if (!groupId || !anchorId || !commonElementId) {
+          console.log('rejecting..');
+          reject();
+          return;
+        }
+        let nonce = getState().transitions.nonce;
+        /**
+        location.state = {
+          nonce: nonce++,
+          group: store[groupId],
+          anchor: store[anchorId],
+          commonElement: store[commonElementId],
+        };
+         **/
+        location.state = {
+          nonce: nonce++,
+          groupId,
+          anchorId,
+          commonElementId,
+        };
+        console.log('location = ', location);
+        next(push(location));
+        // next(push(location));
+        // next(action);
+        //next(push(...location));
+        /**
+        next({
+          type: '@@router/CALL_HISTORY_METHOD',
+          //type: navActions.LOCATION_CHANGE,
+          payload: {
+            method: 'push',
+            location,
+          },
+        });
+         **/
+        /**
+        next({
+          type: navActions.LOCATION_CHANGE,
+          //type: mdTransitionActions.TRANSITION_ROUTE,
+          payload: {
+            location
+          },
+        });
+         **/
+        break;
+      default:
+        reject();
+    }
   },
   process({ getState, action }, dispatch, done) {
+    //dispatch(push(action.payload.location));
+    // dispatch(action);
     console.log('processing action = ', action);
-    dispatch(push(action.payload.location));
+    console.log('PROCESSING STATE = ', getState());
+    dispatch(push('/dashboard'));
+    // dispatch(push(action.payload.location));
+    //dispatch(push(action.payload));
+    // history.push(location);
     done();
   }
 });

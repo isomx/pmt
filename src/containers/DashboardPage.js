@@ -22,6 +22,7 @@ class DashboardPage extends Component {
   }
   // <Toolbar title={this.props.location.pathname} />
   render() {
+    // console.log('match = ', this.props.match);
     return(
       <div key={this.props.location.key}>
 
