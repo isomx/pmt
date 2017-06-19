@@ -1,4 +1,4 @@
-// import { push } from 'react-router-redux';
+import { push } from 'react-router-redux';
 const routerLocationChange = '@@router/LOCATION_CHANGE';
 /**
 export const navTransitionIn = (dispatch) => {
@@ -32,12 +32,17 @@ export const navTransitionIn = (e, url) => (dispatch, getState) => {
   // dispatch({type: 'My Action', payload: {something: '123', something2: '456'}});
 }
  **/
+
+/**
 export const toDashboard = {
   type: routerLocationChange,
   payload: {
     url: '/dashboard',
   }
 }
+ **/
+export const toDashboard = push('/dashboard');
+export const toFunnels = push('/funnels');
 
 export const toRoute = (key) => {
   let action = {

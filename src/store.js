@@ -1,45 +1,29 @@
-/* eslint-disable */
 import { applyMiddleware, createStore } from 'redux';
 import { createLogicMiddleware } from 'redux-logic';
-import combinedLogic from './logic/index';
+import { mdTransitionMiddleware } from './lib/systemManager';
 import createBrowserHistory from 'history/createBrowserHistory';
 import { routerMiddleware } from 'react-router-redux';
 import reducers from './reducers/Index';
+// import {createLogger} from 'redux-logger';
 
-import {createLogger} from 'redux-logger';
-import thunk from 'redux-thunk';
-import { observable } from './middleware/observables';
+/**
+ * redux-thunk is installed as package. If you need it, include the thunk imported as:
+ * -> import thunk from 'redux-thunk'
+ * ...in applyMiddleWare()
+ * NOTE: remove redux-thunk from package.json if you ultimately do not use.
+ * You should not need it since using redux-logic
+**/
 
-export const history = createBrowserHistory();
-
+/**
+ * Create Logic Middleware
+ * @deps is injected into each createLogic() middleware instance. Can be anything you might need.
+ **/
 const deps = {
   key: 'keyedVal1',
 };
-const logicMiddleware = createLogicMiddleware(combinedLogic, deps);
+const logic = createLogicMiddleware(mdTransitionMiddleware, deps);
 
- const error = store => next => action => {
-   console.log('error store = ', store);
-   console.log('error next = ', next);
-   console.log('error action = ', action);
-   // action.payload.something = '789';
-   //next(action);
-   return false;
-
-
-   /**
-
-   try {
-        next(action);
-    } catch (e) {
-        console.log('AHHHH!!!', e);
-    }
-    **/
-};
-
-// const middleware = applyMiddleware(thunk, routerMiddleware(history), error, createLogger());
-const middleware = applyMiddleware(thunk, logicMiddleware, routerMiddleware(history));
-
-
-// const middleware = applyMiddleware(thunk, error, routerMiddleware(history));
-// const middleware = applyMiddleware(thunk, createLogger(), error, routerMiddleware(history));
+export const history = createBrowserHistory();
+//const middleware = applyMiddleware(logic, routerMiddleware(history), createLogger());
+const middleware = applyMiddleware(logic, routerMiddleware(history));
 export default createStore(reducers, middleware);

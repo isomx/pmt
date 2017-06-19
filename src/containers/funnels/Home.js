@@ -2,26 +2,14 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
 import Card from 'react-md/lib/Cards/Card';
 import CardTitle from 'react-md/lib/Cards/CardTitle';
 import CardActions from 'react-md/lib/Cards/CardActions';
 import CardText from 'react-md/lib/Cards/CardText';
 import Media, { MediaOverlay } from 'react-md/lib/Media';
-// import Avatar from 'react-md/lib/Avatars';
 import Button from 'react-md/lib/Buttons';
-// import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import TweenMax, { Power2 } from 'gsap';
-import ReactTransitionGroup from 'react-addons-transition-group';
-import { routeTransition } from '../../actions/mdTransition';
-import { toRoute } from '../../actions/nav';
-import MdTransitionEvent from '../../components/mdTransitions/MdTransitionEvent';
-
-
-import MdTransitionAnchor from '../../components/mdTransitions/MdTransitionAnchor';
-import MdTransitionElement from '../../components/mdTransitions/MdTransitionElement';
-
-import Manage from './Manage';
+import { MdTransitionEvent, MdTransitionAnchor, MdTransitionElement } from '../../lib/systemManager';
+import { toDashboard } from '../../actions/nav';
 
 const imgSrc = 'http://freedomlifestylenetwork.com/app/img/screenshots/s_74_0.jpg';
 
@@ -85,6 +73,28 @@ class Home extends Component {
     // this.props.navTransitionIn(this.props.location, url, {left: rect.left, top: rect.top, width: rect.width, height: rect.height});
     this.props.navTransitionIn(e, url);
   }
+  buildStoreTree(data) {
+    let tree = [], childrenOf = {}, item, id, parentId;
+    for (let i = 0, length = data.length; i < length; i++) {
+      item = data[i];
+      id = item.id;
+      parentId = item.parentId || 0;
+      // every item may have children
+      childrenOf[id] = childrenOf[id] || [];
+      // init its children
+      item.children = childrenOf[id];
+      if (parentId == 0) {
+        tree.push(item);
+      } else {
+        // init its parent's children object
+        childrenOf[parentId] = childrenOf[parentId] || [];
+        // push it into its parent's children object
+        childrenOf[parentId].push(item);
+      }
+    };
+    console.log('tree = ', tree);
+    return tree;
+  }
 
   render() {
     console.log('Home rendering');
@@ -108,88 +118,175 @@ class Home extends Component {
         // this.setState({runCount: 2});
       }, 2000);
     }
+    // <Card style={{ height: '100%' }} className="md-block-centered" raise={true}>
+    // <MdTransitionAnchor component={Card} name="card1" className="md-block-centered" raise={true}>
     return(
-      <section className="md-grid md-grid--40-24" style={{background: '#fafafa'}}>
-        <ReactTransitionGroup>
-          {this.state.runCount === 5 && <Manage doNav={this.handleClick} />}
-        </ReactTransitionGroup>
+      <section className="md-grid md-grid--40-24 example" style={{background: '#fafafa'}}>
         <div className="md-cell md-cell--4">
-          <MdTransitionAnchor name="card1">
-            <Card style={{ height: '100%' }} className="md-block-centered" raise={true}>
+          <Card className="md-block-centered" raise={true}>
+            <MdTransitionElement name="card14">
               <Media>
                 <img src={imgSrc} role="presentation" onClick={(e) => { this.props.routeTransition(e, '/dashboard'); }}/>
                 <MediaOverlay>
-                    <CardTitle title="mysiteasdfwejlk34.com">
-                      <Button className="md-cell--right" icon>star_outline</Button>
-                    </CardTitle>
+                  <CardTitle title="mysiteasdfwejlk34.com">
+                    <Button className="md-cell--right" icon>star_outline</Button>
+                  </CardTitle>
                 </MediaOverlay>
               </Media>
-              <MdTransitionElement name="card1">
+            </MdTransitionElement>
+            <CardTitle
+              title="Card Title"
+              subtitle="Card Subtitle"
+            />
+            <CardActions expander>
+              <Button flat label="MANAGE" onClick={(e) => { this.navIn(e, '/funnels/manage') } } />
+              <MdTransitionEvent name="event13" render={(props) =>
+                <Button flat label="Dashboard" onClick={(event) => {
+                  props.recordPosition();
+                  this.props.toDashboard();
+                }} />
+              } />
+            </CardActions>
+            <CardText expandable></CardText>
+          </Card>
+        </div>
+        <div className="md-cell md-cell--4">
+          <Card className="md-block-centered" raise={true}>
+            <MdTransitionElement name="card14">
+              <Media>
+                <img src={imgSrc} role="presentation" onClick={(e) => { this.props.routeTransition(e, '/dashboard'); }}/>
+                <MediaOverlay>
+                  <CardTitle title="mysiteasdfwejlk34.com">
+                    <Button className="md-cell--right" icon>star_outline</Button>
+                  </CardTitle>
+                </MediaOverlay>
+              </Media>
+            </MdTransitionElement>
+            <CardTitle
+              title="Card Title"
+              subtitle="Card Subtitle"
+            />
+            <CardActions expander>
+              <Button flat label="MANAGE" onClick={(e) => { this.navIn(e, '/funnels/manage') } } />
+              <MdTransitionEvent name="event13" render={(props) =>
+                <Button flat label="Dashboard" onClick={(event) => {
+                  props.recordPosition();
+                  this.props.toDashboard();
+                }} />
+              } />
+            </CardActions>
+            <CardText expandable></CardText>
+          </Card>
+        </div>
+        <div className="md-cell md-cell--4">
+          <Card className="md-block-centered" raise={true}>
+            <MdTransitionElement name="card14">
+              <Media>
+                <img src={imgSrc} role="presentation" onClick={(e) => { this.props.routeTransition(e, '/dashboard'); }}/>
+                <MediaOverlay>
+                  <CardTitle title="mysiteasdfwejlk34.com">
+                    <Button className="md-cell--right" icon>star_outline</Button>
+                  </CardTitle>
+                </MediaOverlay>
+              </Media>
+            </MdTransitionElement>
+            <CardTitle
+              title="Card Title"
+              subtitle="Card Subtitle"
+            />
+            <CardActions expander>
+              <Button flat label="MANAGE" onClick={(e) => { this.navIn(e, '/funnels/manage') } } />
+              <MdTransitionEvent name="event13" render={(props) =>
+                <Button flat label="Dashboard" onClick={(event) => {
+                  props.recordPosition();
+                  this.props.toDashboard();
+                }} />
+              } />
+            </CardActions>
+            <CardText expandable></CardText>
+          </Card>
+        </div>
+        <div className="md-cell md-cell--4">
+          <Card className="md-block-centered" raise={true}>
+              <MdTransitionElement name="card11">
+                <Media>
+                  <img src={imgSrc} role="presentation" onClick={(e) => { this.props.routeTransition(e, '/dashboard'); }}/>
+                  <MediaOverlay>
+                      <CardTitle title="mysiteasdfwejlk34.com">
+                        <Button className="md-cell--right" icon>star_outline</Button>
+                      </CardTitle>
+                  </MediaOverlay>
+                </Media>
+              </MdTransitionElement>
+              <CardTitle
+                title="Card Title"
+                subtitle="Card Subtitle"
+              />
+              <CardActions expander>
+                <Button flat label="MANAGE" onClick={(e) => { this.navIn(e, '/funnels/manage') } } />
+                  <MdTransitionEvent name="event11" render={(props) =>
+                    <Button flat label="Dashboard" onClick={(event) => {
+                      props.recordPosition();
+                      this.props.toDashboard();
+                    }} />
+                  } />
+              </CardActions>
+              <CardText expandable></CardText>
+          </Card>
+        </div>
+        <MdTransitionAnchor name="card13" render={(anchorData) => {
+          return (
+            <div ref={anchorData.registerDOMElem} className="md-cell md-cell--4">
+              <Card className="md-block-centered" raise={true}>
+                <MdTransitionElement name="card13">
+                  <Media>
+                    <img src={imgSrc} role="presentation" />
+                  </Media>
+                </MdTransitionElement>
+
                 <CardTitle
                   title="Card Title"
                   subtitle="Card Subtitle"
                 />
-              </MdTransitionElement>
-              <CardActions expander>
-                <Button flat label="MANAGE" onClick={(e) => { this.navIn(e, '/funnels/manage') } } />
-                <MdTransitionEvent render={(props) =>
-                  <Button flat label="Dashboard" onClick={(event) => {
-                    // props.routeTransition('/dashboard', 'anchorCommonElement', 'card1');
-                    props.dispatchToParentGroup({
-                      type: 'toDashboard',
-                      payload: {
-                        commonElement: 'card1',
-                      }
-                    });
-                  }} />
-                } />
-              </CardActions>
-              <CardText expandable>
-              </CardText>
-            </Card>
-          </MdTransitionAnchor>
-        </div>
+                <CardActions expander>
+                  <Button flat label="MANAGE" onClick={(e) => { this.navIn(e, '/funnels/manage') } } />
+                  <MdTransitionEvent name="event13" render={(props) =>
+                    <Button flat label="Dashboard CLICK HERE" onClick={(event) => {
+                      props.recordPosition();
+                      this.props.toDashboard();
+                    }} />
+                  } />
+                </CardActions>
+              </Card>
+            </div>
+          );
+        }} />
         <div className="md-cell md-cell--4">
-          <Card style={{ height: '100%' }} className="md-block-centered" raise={true}>
-            <Media>
-              <img src={imgSrc} role="presentation" />
-            </Media>
+          <Card className="md-block-centered" raise={true}>
+            <MdTransitionElement name="card14">
+              <Media>
+                <img src={imgSrc} role="presentation" onClick={(e) => { this.props.routeTransition(e, '/dashboard'); }}/>
+                <MediaOverlay>
+                  <CardTitle title="mysiteasdfwejlk34.com">
+                    <Button className="md-cell--right" icon>star_outline</Button>
+                  </CardTitle>
+                </MediaOverlay>
+              </Media>
+            </MdTransitionElement>
             <CardTitle
               title="Card Title"
               subtitle="Card Subtitle"
             />
-            <CardActions>
-              <Button flat label="Action 1" />
-              <Button flat label="Action 2" onMouseUp={this.handleClick} />
+            <CardActions expander>
+              <Button flat label="MANAGE" onClick={(e) => { this.navIn(e, '/funnels/manage') } } />
+              <MdTransitionEvent name="event13" render={(props) =>
+                <Button flat label="Dashboard" onClick={(event) => {
+                  props.recordPosition();
+                  this.props.toDashboard();
+                }} />
+              } />
             </CardActions>
-          </Card>
-        </div>
-        <div className="md-cell md-cell--4">
-          <Card style={{ height: '100%' }} className="md-block-centered" raise={true}>
-            <Media>
-              <img src={imgSrc} role="presentation" />
-              <MediaOverlay>
-                <CardTitle title="Site 7" subtitle="Site subtitle">
-                  <Button className="md-cell--right" icon>star_outline</Button>
-                </CardTitle>
-              </MediaOverlay>
-            </Media>
-            <CardTitle
-              title="Card Title"
-              subtitle="Card Subtitle"
-            />
-            <CardActions>
-              <Button flat label="Action 1" />
-              <Button flat label="Action 2" />
-            </CardActions>
-            <CardText expandable>
-              <div>
-                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aperiam, autem blanditiis cum
-                  expedita id iste labore laboriosam minima neque, nisi, sed soluta vel? Amet fugiat officiis quasi
-                  soluta vel?
-                </div>
-              </div>
-            </CardText>
+            <CardText expandable></CardText>
           </Card>
         </div>
         <div className="md-cell md-cell--4">
@@ -219,9 +316,8 @@ function mapStateToProps(store, ownProps) {
 
 function mapDispatchToProps(dispatch, state) {
   return {
-    routeTransition: (e, locOrUrl, eventProps) => dispatch(routeTransition(e, locOrUrl, eventProps)),
-    // toRoute: (route) => dispatch(toRoute(route)),
+    toDashboard: () => dispatch(toDashboard),
   };
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

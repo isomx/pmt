@@ -7,241 +7,300 @@ import CardTitle from 'react-md/lib/Cards/CardTitle';
 import CardActions from 'react-md/lib/Cards/CardActions';
 import CardText from 'react-md/lib/Cards/CardText';
 import Media, { MediaOverlay } from 'react-md/lib/Media';
-import { routeTransition } from '../actions/mdTransition';
+import { MdTransitionEvent, MdTransitionAnchor, MdTransitionElement } from '../lib/systemManager';
+import { toFunnels } from '../actions/nav';
 // import Avatar from 'react-md/lib/Avatars';
-import Button from 'react-md/lib/Buttons';
+import Button from 'react-md/lib/Buttons/Button';
 import Toolbar from '../components/Toolbar';
+import { MdTransitionGroup, MdTransitionHandler, transitionTypes } from '../lib/systemManager';
 
 const imgSrc = 'http://freedomlifestylenetwork.com/app/img/screenshots/s_74_0.jpg';
 class DashboardPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      siteId: 0,
+      surfaceOpen: false,
+      cardOpen: false,
     };
+    this.surfaceMorph = this.surfaceMorph.bind(this);
+    this.cardExpand = this.cardExpand.bind(this);
   }
   // <Toolbar title={this.props.location.pathname} />
   render() {
     // console.log('match = ', this.props.match);
+    //<section key={location.key} className="md-grid md-grid--40-24  example" style={{background: '#fafafa'}}>
+    // 700
+    /**
+     * style={{position: 'absolute',top: '360px', left: '175px', zIndex: 5}}
+     * style={{position: 'fixed', top: '500px', left: '500px', zIndex: 5}}
+     * backgroundColor: 'rgba(255, 145, 0, 0.9)'
+     *
+     *
+     *
+     * <MdTransitionAnchor name="surfaceMorph1" render={(anchorData) => {
+                      return(
+
+                          <div ref={anchorData.registerDOMElem} style={{position: 'absolute',top: '188px', border: '#000000 1px solid', left: '400px', zIndex: 6, width: '400px', height: '200px'}}>
+                            <p>TITLE</p>
+                          </div>
+                      )
+                    }} />
+     */
     return(
-      <div key={this.props.location.key}>
+      <MdTransitionAnchor name="card13" render={(anchorData) => {
+        const surface = () => {
+          if (this.state.surfaceOpen) {
+            return (
+              <MdTransitionGroup name='morphButton' transitionType={transitionTypes.SURFACE_MORPH}>
+                <MdTransitionHandler key='opened' name='floatingMorphOpened'>
+                  <section style={{width: '200px', position: 'absolute', zIndex: 6}} className="md-grid md-grid--40-24">
+                    <MdTransitionAnchor name="surfaceMorph1" render={(anchorData) => {
+                      return(
 
-      <section key={location.key} className="md-grid md-grid--40-24 example md-toolbar--relative" style={{background: '#fafafa'}}>
-        <div key={location.key} className="md-cell md-cell--2">
-          <Card style={{ height: '100%' }} className="md-block-centered" raise={true}>
-            <Media>
-              <img src={imgSrc} role="presentation" />
-              <MediaOverlay>
-                <CardTitle title="mysiteasdfwejlk34.com">
-                  <Button className="md-cell--right" icon>star_outline</Button>
-                </CardTitle>
-              </MediaOverlay>
-            </Media>
-            <CardTitle
-              title="Card Title"
-              subtitle="Card Subtitle"
-            />
-            <CardActions expander>
-              <Button flat label="Funnels Page" onClick={(e) => { this.props.routeTransition(e, '/funnels?something=241'); }} />
-              <Button flat label="Action 2" />
-            </CardActions>
-            <CardText expandable>
-              <div>
-                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aperiam, autem blanditiis cum
-                  expedita id iste labore laboriosam minima neque, nisi, sed soluta vel? Amet fugiat officiis quasi
-                  soluta vel?
-                </div>
-                <div>Aliquam animi dolores eius est eum excepturi incidunt laudantium magnam maxime minus modi nobis
-                  numquam odit, quod reprehenderit similique, sint. Cupiditate excepturi explicabo, fuga labore
-                  mollitia nesciunt sit. Asperiores, eius?
-                </div>
-                <div>Aliquid amet consectetur consequuntur culpa cupiditate dignissimos dolore, eos ex explicabo
-                  ipsa ipsam itaque maiores modi nihil omnis porro quae quod repudiandae sit vel! Harum minus nobis
-                  quasi quod sapiente?
-                </div>
-                <div>Ab amet, aperiam, aspernatur atque consectetur consequatur cumque, earum esse eum fugit harum
-                  ipsa ipsam iste laboriosam nulla odit perferendis possimus praesentium quaerat repellat rerum sed
-                  similique sunt totam vitae?
-                </div>
-                <div>Aliquid, asperiores deserunt itaque officia ut voluptas? Accusantium ad alias aliquid, beatae
-                  cumque debitis doloribus ea ipsam itaque nam natus pariatur possimus quas, quis sequi sunt tempore
-                  veniam voluptatem voluptatum?
-                </div>
-              </div>
-            </CardText>
-          </Card>
-        </div>
-        <div className="md-cell md-cell--2">
-          <Card style={{ height: '100%' }} className="md-block-centered" raise={true}>
-            <Media>
-              <img src={imgSrc} role="presentation" />
-            </Media>
-            <CardTitle
-              title="Card Title"
-              subtitle="Card Subtitle"
-            />
-            <CardActions>
-              <Button flat label="Action 1" />
-              <Button flat label="Action 2" />
-            </CardActions>
-          </Card>
-        </div>
-        <div className="md-cell md-cell--2">
-          <Card style={{ height: '100%' }} className="md-block-centered" raise={true}>
-            <Media>
-              <img src={imgSrc} role="presentation" />
-              <MediaOverlay>
-                <CardTitle title="Site 7" subtitle="Site subtitle">
-                  <Button className="md-cell--right" icon>star_outline</Button>
-                </CardTitle>
-              </MediaOverlay>
-            </Media>
-            <CardTitle
-              title="Card Title"
-              subtitle="Card Subtitle"
-            />
-            <CardActions>
-              <Button flat label="Action 1" />
-              <Button flat label="Action 2" />
-            </CardActions>
-            <CardText expandable>
-              <div>
-                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aperiam, autem blanditiis cum
-                  expedita id iste labore laboriosam minima neque, nisi, sed soluta vel? Amet fugiat officiis quasi
-                  soluta vel?
-                </div>
-              </div>
-            </CardText>
-          </Card>
-        </div>
-        <div className="md-cell md-cell--6">
-          <Card style={{ height: '100%' }} className="md-block-centered" raise={true} tableCard={true}>
-            <Media>
-              <img src={imgSrc} role="presentation" />
-              <MediaOverlay>
-                <CardTitle title="Site 4" subtitle="Wow!">
-                  <Button className="md-cell--right" icon>star_outline</Button>
-                </CardTitle>
-              </MediaOverlay>
-            </Media>
-            <CardTitle
-              title="Card Title"
-              subtitle="Card Subtitle"
-            />
-          </Card>
-        </div>
+                        <div ref={anchorData.registerDOMElem} style={{position: 'absolute',top: '325px', left: '1300px', zIndex: 6, height: '200px'}} className="md-cell md-cell--12">
+                          <Card style={{ height: '100%', }} className="md-block-centered" raise={true}>
+                            <CardTitle
+                              title="Morph Surface"
+                            />
+                            <CardActions>
+                              <MdTransitionEvent name="morphEvent" render={(props) =>
+                                <Button flat label="Close" onClick={(e) => {
+                                  props.recordPosition();
+                                  this.surfaceMorph();
+                                }} />
+                              } />
+                            </CardActions>
+                          </Card>
+                        </div>
+                      )
+                    }} />
+                  </section>
+                </MdTransitionHandler>
+              </MdTransitionGroup>
+            )
+          }
+          //style={{position: 'fixed', top: '600px', left: '1500px', zIndex: 50}}
+          //style={{position: 'fixed', top: '88px', left: '1500px', zIndex: 5}}
+          // style={{position: 'fixed', top: '400px', left: '30px', zIndex: 5}}
+          return (
+            <MdTransitionGroup name='morphButton' transitionType={transitionTypes.SURFACE_EXPAND}>
+              <MdTransitionHandler key='closed' name='floatingMorphClosed'>
+                <MdTransitionAnchor name="surfaceMorph1" findById="asdfasdf" render={(anchorData) =>
+                  <MdTransitionEvent name="morphEvent" render={(props) =>
+                    <Button id="asdfasdf" style={{position: 'fixed', top: '88px', left: '20px', zIndex: 5}} floating secondary onClick={(e) => {
+                      props.recordPosition();
+                      //anchorData.registerDOMElem(e.target);
+                      this.surfaceMorph();
+                    }}>add</Button>
+                  } />
+                }>
+                </MdTransitionAnchor>
+              </MdTransitionHandler>
+            </MdTransitionGroup>
+          )
+        };
+        //return surface();
+
+        const card = () => {
+          if (this.state.cardOpen) {
+            return (
+              <MdTransitionGroup name='cardExpand' transitionType={transitionTypes.SURFACE_EXPAND}>
+                <MdTransitionHandler key='opened' name='cardOpened'>
+                  <MdTransitionAnchor name="cardExpand1" findById="cardOpened" render={(anchorData) => {
 
 
+                      return(
+                        <div>
+                          <section id="cardOpened" style={{ position: 'absolute', top: '288px', left: '10px', backgroundColor: '#fafafa', width: '1700px', height: '500px', zIndex: 1}} className="md-grid md-grid--40-24 md-paper--5">
+                            <div style={{backgroundColor: '#fafafa', marginLeft: '900px', width: '300px', height: '200px'}} className="md-cell md-cell--12">
+                              <MdTransitionElement name="cardExpandCommon" render={(props) =>
+                                <img ref={props.registerDOMElem} style={{width: '100%', height: '100%'}} src={imgSrc} role="presentation"/>
+                              }/>
+                            </div>
+                          <div style={{backgroundColor: '#fafafa'}} className="md-cell md-cell--12">
+                            <Card style={{backgroundColor: '#224f86'}} className="md-block-centered" raise={true}>
+                              <CardTitle
+                                title="Morph Surface"
+                              />
+                              <CardActions>
+                                <MdTransitionEvent name="cardEvent" render={(props) =>
+                                  <Button flat label="Close" onClick={(e) => {
+                                    props.recordPosition();
+                                    this.cardExpand();
+                                  }} />
+                                } />
+                              </CardActions>
+                            </Card>
+                          </div>
+                        </section>
 
+                        </div>
 
-        <div key={location.key} className="md-cell md-cell--4">
-          <Card style={{ height: '100%' }} className="md-block-centered" raise={true}>
-            <Media>
-              <img src={imgSrc} role="presentation" />
-              <MediaOverlay>
-                <CardTitle title="mysiteasdfwejlk34.com">
-                  <Button className="md-cell--right" icon>star_outline</Button>
-                </CardTitle>
-              </MediaOverlay>
-            </Media>
-            <CardTitle
-              title="Card Title"
-              subtitle="Card Subtitle"
-            />
-            <CardActions expander>
-              <Button flat label="Action 1" />
-              <Button flat label="Action 2" />
-            </CardActions>
-            <CardText expandable>
-              <div>
-                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aperiam, autem blanditiis cum
-                  expedita id iste labore laboriosam minima neque, nisi, sed soluta vel? Amet fugiat officiis quasi
-                  soluta vel?
-                </div>
-                <div>Aliquam animi dolores eius est eum excepturi incidunt laudantium magnam maxime minus modi nobis
-                  numquam odit, quod reprehenderit similique, sint. Cupiditate excepturi explicabo, fuga labore
-                  mollitia nesciunt sit. Asperiores, eius?
-                </div>
-                <div>Aliquid amet consectetur consequuntur culpa cupiditate dignissimos dolore, eos ex explicabo
-                  ipsa ipsam itaque maiores modi nihil omnis porro quae quod repudiandae sit vel! Harum minus nobis
-                  quasi quod sapiente?
-                </div>
-                <div>Ab amet, aperiam, aspernatur atque consectetur consequatur cumque, earum esse eum fugit harum
-                  ipsa ipsam iste laboriosam nulla odit perferendis possimus praesentium quaerat repellat rerum sed
-                  similique sunt totam vitae?
-                </div>
-                <div>Aliquid, asperiores deserunt itaque officia ut voluptas? Accusantium ad alias aliquid, beatae
-                  cumque debitis doloribus ea ipsam itaque nam natus pariatur possimus quas, quis sequi sunt tempore
-                  veniam voluptatem voluptatum?
-                </div>
-              </div>
-            </CardText>
-          </Card>
-        </div>
-        <div className="md-cell md-cell--4">
-          <Card style={{height: '100%' }} raise={true}>
-            <Media>
-              <img src={imgSrc} role="presentation" />
-            </Media>
-            <CardTitle
-              title="Card Title"
-              subtitle="Card Subtitle"
-            />
-            <CardActions>
-              <Button flat label="Action 1" />
-              <Button flat label="Action 2" />
-            </CardActions>
-          </Card>
-        </div>
-        <div className="md-cell md-cell--2">
-          <Card style={{height: '100%' }} raise={true}>
-            <Media>
-              <img src={imgSrc} role="presentation" />
-              <MediaOverlay>
-                <CardTitle title="Site 7" subtitle="Site subtitle">
-                  <Button className="md-cell--right" icon>star_outline</Button>
-                </CardTitle>
-              </MediaOverlay>
-            </Media>
-            <CardTitle
-              title="Card Title"
-              subtitle="Card Subtitle"
-            />
-            <CardActions>
-              <Button flat label="Action 1" />
-              <Button flat label="Action 2" />
-            </CardActions>
-            <CardText>
-              <div>
-                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aperiam, autem blanditiis cum
-                  expedita id iste labore laboriosam minima neque, nisi, sed soluta vel? Amet fugiat officiis quasi
-                  soluta vel?
-                </div>
-              </div>
-            </CardText>
-          </Card>
-        </div>
-        <div className="md-cell md-cell--2">
-          <Card style={{ height: '100%' }} raise={true} tableCard={true}>
-            <Media>
-              <img src={imgSrc} role="presentation" />
-              <MediaOverlay>
-                <CardTitle title="Site 4" subtitle="Wow!">
-                  <Button className="md-cell--right" icon>star_outline</Button>
-                </CardTitle>
-              </MediaOverlay>
-            </Media>
-            <CardTitle
-              title="Card Title"
-              subtitle="Card Subtitle"
-            />
-          </Card>
-        </div>
-      </section>
-      </div>
+                      )
+                    }} />
+
+                </MdTransitionHandler>
+              </MdTransitionGroup>
+            )
+          }
+          //style={{position: 'fixed', top: '600px', left: '1500px', zIndex: 50}}
+          //style={{position: 'fixed', top: '88px', left: '1500px', zIndex: 5}}
+          // style={{position: 'fixed', top: '400px', left: '30px', zIndex: 5}}
+          /**
+          return (
+            <MdTransitionGroup name='cardExpand' transitionType={transitionTypes.SURFACE_EXPAND}>
+              <MdTransitionHandler key='closed' name='cardClosed'>
+                <MdTransitionAnchor name="cardExpand1" findById="asdfasdf" render={(anchorData) =>
+                  <MdTransitionEvent name="cardEvent" render={(props) =>
+                    <Button id="asdfasdf" style={{position: 'fixed', top: '88px', left: '20px', zIndex: 5}} floating secondary onClick={(e) => {
+                      props.recordPosition();
+                      //anchorData.registerDOMElem(e.target);
+                      this.cardExpand();
+                    }}>add</Button>
+                  } />
+                }>
+                </MdTransitionAnchor>
+              </MdTransitionHandler>
+            </MdTransitionGroup>
+          )
+           **/
+          return (
+            <MdTransitionGroup name='cardExpand' transitionType={transitionTypes.SURFACE_EXPAND}>
+              <MdTransitionHandler key='closed' name='cardClosed'>
+                <MdTransitionAnchor name="cardExpand1" findById="cardExpander123" render={(anchorData) =>
+                  <section className="md-grid md-grid--40-24">
+                    <div className="md-cell md-cell--2">
+                      <Card className="md-block-centered" raise={true}>
+                        <MdTransitionElement name="card13">
+                          <Media>
+                            <img src={imgSrc} role="presentation"/>
+                          </Media>
+                        </MdTransitionElement>
+                        <CardTitle
+                          title="Card Title"
+                          subtitle="Card Subtitle"
+                        />
+                        <CardActions expander>
+                          <MdTransitionEvent name="cardEvent" render={(props) =>
+                            <Button flat label="Funnels Page" onClick={(e) => {
+                              props.recordPosition();
+                              this.cardExpand();
+                            }}/>
+                          }/>
+                          <Button flat label="Action 2"/>
+                        </CardActions>
+                      </Card>
+                    </div>
+                    <div className="md-cell md-cell--2">
+                      <Card className="md-block-centered" raise={true}>
+                        <MdTransitionElement name="card13">
+                          <Media>
+                            <img src={imgSrc} role="presentation"/>
+                          </Media>
+                        </MdTransitionElement>
+                        <CardTitle
+                          title="Card Title"
+                          subtitle="Card Subtitle"
+                        />
+                        <CardActions expander>
+                          <MdTransitionEvent name="cardEvent" render={(props) =>
+                            <Button flat label="Funnels Page" onClick={(e) => {
+                              props.recordPosition();
+                              this.cardExpand();
+                            }}/>
+                          }/>
+                          <Button flat label="Action 2"/>
+                        </CardActions>
+                      </Card>
+                    </div>
+                    <div className="md-cell md-cell--2">
+
+                        <Card id="cardExpander123" style={{backgroundColor: '#fafafa'}} className="md-block-centered" raise={true}>
+                          <MdTransitionElement name="cardExpandCommon" render={(props) =>
+                            <Media>
+                              <img ref={props.registerDOMElem} src={imgSrc} style={{width: '100%', height: '100%'}} role="presentation"/>
+                            </Media>
+                          }/>
+                          <CardTitle
+                            title="Card Title"
+                            subtitle="Card Subtitle"
+                          />
+                          <CardActions expander>
+                            <MdTransitionEvent name="cardEvent" render={(props) =>
+                              <Button flat label="CLICK HERE" onClick={(e) => {
+                                props.recordPosition();
+                                this.cardExpand();
+                              }}/>
+                            }/>
+                            <Button flat label="Action 2"/>
+                          </CardActions>
+                        </Card>
+                    </div>
+                    <div className="md-cell md-cell--2">
+                      <Card className="md-block-centered" raise={true}>
+                        <MdTransitionElement name="card13">
+                          <Media>
+                            <img src={imgSrc} role="presentation"/>
+                          </Media>
+                        </MdTransitionElement>
+                        <CardTitle
+                          title="Card Title"
+                          subtitle="Card Subtitle"
+                        />
+                        <CardActions expander>
+                          <MdTransitionEvent name="cardEvent" render={(props) =>
+                            <Button flat label="Funnels Page" onClick={(e) => {
+                              props.recordPosition();
+                              this.cardExpand();
+                            }}/>
+                          }/>
+                          <Button flat label="Action 2"/>
+                        </CardActions>
+                      </Card>
+                    </div>
+                    <div className="md-cell md-cell--2">
+                      <Card className="md-block-centered" raise={true}>
+                        <MdTransitionElement name="card13">
+                          <Media>
+                            <img src={imgSrc} role="presentation"/>
+                          </Media>
+                        </MdTransitionElement>
+                        <CardTitle
+                          title="Card Title"
+                          subtitle="Card Subtitle"
+                        />
+                        <CardActions expander>
+                          <MdTransitionEvent name="cardEvent" render={(props) =>
+                            <Button flat label="Funnels Page" onClick={(e) => {
+                              props.recordPosition();
+                              this.cardExpand();
+                            }}/>
+                          }/>
+                          <Button flat label="Action 2"/>
+                        </CardActions>
+                      </Card>
+                    </div>
+                  </section>
+                }/>
+              </MdTransitionHandler>
+            </MdTransitionGroup>
+          );
+        };
+        return card();
+
+      }} />
     );
   }
+
+  surfaceMorph() {
+    this.setState({surfaceOpen: !this.state.surfaceOpen});
+  }
+
+  cardExpand() {
+    this.setState({cardOpen: !this.state.cardOpen});
+  }
 }
+
 
 
 function mapStateToProps(store, ownProps) {
@@ -251,7 +310,7 @@ function mapStateToProps(store, ownProps) {
 
 function mapDispatchToProps(dispatch, state) {
   return {
-    routeTransition: (e, locOrUrl) => dispatch(routeTransition(e, locOrUrl)),
+    toFunnels: () => dispatch(toFunnels),
   };
 }
 
